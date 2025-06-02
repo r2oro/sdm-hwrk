@@ -65,7 +65,7 @@ resource "aws_eip" "sdm_hwrk_eip_nat" {
 }
 
 resource "aws_nat_gateway" "sdm_hwrk_ng" {
-    subnet_id = aws_subnet.private_subnet.id
+    subnet_id = aws_subnet.public_subnet.id
     allocation_id = aws_eip.sdm_hwrk_eip_nat.id
     tags = {
         Name = "sdm-hwrk-ng"
