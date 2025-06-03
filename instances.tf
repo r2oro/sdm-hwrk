@@ -43,7 +43,7 @@ resource "aws_instance" "jumpbox" {
     associate_public_ip_address = true
     instance_type = "t2.micro"
     subnet_id = aws_subnet.public_subnet.id
-    security_groups =  [aws_security_group.jumpbox_sg.id]
+    vpc_security_group_ids =  [aws_security_group.jumpbox_sg.id]
     key_name = aws_key_pair.sdm-hwrk_key.key_name
     tags = {
         Name = "sdm-hwrk-jumpbox"
@@ -86,7 +86,7 @@ resource "aws_instance" "private_instance" {
     associate_public_ip_address = false
     instance_type = "t2.micro"
     subnet_id = aws_subnet.private_subnet.id
-    security_groups =  [aws_security_group.private_sg.id]
+    vpc_security_group_ids =  [aws_security_group.private_sg.id]
     key_name = aws_key_pair.sdm-hwrk_key.key_name
 
     tags = {
