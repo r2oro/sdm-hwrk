@@ -4,8 +4,8 @@ data "aws_ami" "linux_ami" {
 
     filter {
         name   = "name"
-        # values = ["amzn2-ami-hvm-*-x86_64-gp2"]
-        values = ["al2023-*-x86_64"]
+        values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+        # values = ["al2023-*-x86_64"]
     }
     filter {
         name   = "virtualization-type"
