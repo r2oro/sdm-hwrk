@@ -9,67 +9,6 @@ resource "aws_eip" "sdm_hwrk_gateway" {
   }
 }
 
-resource "aws_iam_role" "sdm_ec2_gateway" {
-  name = "sdm-ec2-gateway-role"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Action = "sts:AssumeRole"
-      Effect = "Allow"
-      Principal = {
-        Service = "ec2.amazonaws.com"
-      }
-    }]
-  })
-  tags = {
-    Name = "sdm-ec2-gateway-role"
-  }
-}
-
-# IAM policy allowing the gateway to access tagged secrets in Secrets Manager
-resource "aws_iam_policy" "sdm_secrets_manager_policy" {
-  name        = "sdm-ec2-secrets-manager-policy"
-  description = "Allows EC2 instances to read from AWS Secrets Manager"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Effect = "Allow"
-      Action = [
-        "secretsmanager:GetSecretValue",
-        "secretsmanager:CreateSecret",
-        "secretsmanager:DeleteSecret",
-        "secretsmanager:DescribeSecret",
-        "secretsmanager:ListSecret",
-        "secretsmanager:PutSecretValue",
-        "secretsmanager:UpdateSecret"
-      ]
-      Resource = "*"
-      Condition = {
-        StringEquals = {
-          "aws:ResourceTag/strongdm:gateway" = "true" # Only allow access to secrets tagged for StrongDM gateways
-        }
-      }
-    }]
-  })
-}
-
-# Attach the IAM Policy to the Role
-resource "aws_iam_role_policy_attachment" "attach_secrets_manager_policy" {
-  role       = aws_iam_role.sdm_ec2_gateway.name
-  policy_arn = aws_iam_policy.sdm_secrets_manager_policy.arn
-}
-
-
-# Instance Profile to attach to the EC2 instance
-resource "aws_iam_instance_profile" "sdm_gw_instance_profile" {
-  name = "sdm-gateway-instance-profile"
-  role = aws_iam_role.sdm_ec2_gateway.name
-  tags = {
-    Name = "sdm-gateway-instance-profile"
-  }
-}
-
 # Create a StrongDM gateway node in the control plane
 resource "sdm_node" "sdm_hwrk_gateway" {
   gateway {
@@ -122,7 +61,6 @@ resource "aws_instance" "sdm_hwrk_gateway" {
   subnet_id                   = aws_subnet.public_subnet.id
   associate_public_ip_address = true
   user_data_replace_on_change = true
-  iam_instance_profile        = aws_iam_instance_profile.sdm_gw_instance_profile.name
   vpc_security_group_ids      = [aws_security_group.gateway_sg.id] # Include jumpbox security group for SSH access
   key_name                    = aws_key_pair.sdm_hwrk_gateway.key_name
   # Bootstrap the gateway using the provisioning template
