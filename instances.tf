@@ -88,6 +88,7 @@ resource "aws_instance" "private_instance" {
     instance_type = "t2.micro"
     subnet_id = aws_subnet.private_subnet.id
     vpc_security_group_ids =  [aws_security_group.private_sg.id]
+    key_name = aws_key_pair.sdm-hwrk_key.key_name
     user_data = templatefile("private_instance.tpl.sh", {
         target_user = "ec2-user"
         sshca       = data.sdm_ssh_ca_pubkey.ssh_pubkey_query.public_key
