@@ -9,7 +9,7 @@ resource "aws_security_group" "private_sg" {
         from_port = 22
         to_port = 22
         protocol = "tcp"
-        security_groups = [aws_security_group.gateway_sg.id, aws_security_group.jumpbox_sg.id] # Allow SSH from the jumpbox & gateway
+        security_groups = [aws_security_group.gateway_sg.id]
         description = "Allow SSH access from jumpbox and gateway"
     }
     egress {
@@ -31,7 +31,6 @@ resource "aws_instance" "private_instance" {
     instance_type = "t2.micro"
     subnet_id = aws_subnet.private_subnet.id
     vpc_security_group_ids =  [aws_security_group.private_sg.id]
-    key_name = aws_key_pair.sdm-hwrk_key.key_name
     user_data = templatefile("centos-sdm.tpl.sh", {
         target_user = "ec2-user"
         sshca       = data.sdm_ssh_ca_pubkey.ssh_pubkey_query.public_key
