@@ -46,8 +46,8 @@ resource "sdm_resource" "private_instance_ssh" {
     ssh_cert {
         name = "sdm-hwrk-private-instance"
         hostname = aws_instance.private_instance.private_ip
-        username = "ec2-user"
         port = 22
+        username = "ec2-user"
         tags = {
             "strongdm:private" = "true"
         }

@@ -17,16 +17,6 @@ resource "sdm_node" "sdm_hwrk_gateway" {
     bind_address   = "0.0.0.0:5000"
   }
 }
-
-# Create an AWS key pair using the StrongDM-generated public key
-resource "aws_key_pair" "sdm_hwrk_gateway" {
-  key_name   = "sdm-hwrk-gateway-key"
-  public_key = sdm_resource.sdm_hwrk_gateway_ssh.ssh[0].public_key # Use the public key from the StrongDM SSH resource
-  tags = {
-    Name = "sdm-hwrk-gateway-key"
-  }
-}
-
 resource "aws_security_group" "gateway_sg" {
   name        = "sdm-hwrk-gateway-sg"
   description = "Security group for the StrongDM gateway instance"
@@ -62,11 +52,11 @@ resource "aws_instance" "sdm_hwrk_gateway" {
   associate_public_ip_address = true
   user_data_replace_on_change = true
   vpc_security_group_ids      = [aws_security_group.gateway_sg.id] # Include jumpbox security group for SSH access
-  key_name                    = aws_key_pair.sdm_hwrk_gateway.key_name
   # Bootstrap the gateway using the provisioning template
   user_data = templatefile("gateway.tpl.sh", {
     sdm_relay_token = sdm_node.sdm_hwrk_gateway.gateway[0].token # Relay token for gateway registration
     target_user     = "ubuntu"                          # User to run the gateway service
+    sshca           = data.sdm_ssh_ca_pubkey.ssh_pubkey_query.public_key # StrongDM SSH CA public key
   })
   tags = {
     Name = "sdm_hwrk_gateway"
@@ -81,9 +71,9 @@ resource "aws_eip_association" "gw_eip_assoc" {
 
 # Register the gateway host as an SSH resource in StrongDM for administrative access
 resource "sdm_resource" "sdm_hwrk_gateway_ssh" {
-  ssh {
+  ssh_cert {
     name     = "sdm-hmwrk-gateway"
-    hostname = aws_eip.sdm_hwrk_gateway.private_ip
+    hostname =  aws_instance.sdm_hwrk_gateway.private_ip
     port     = 22
     username = "ubuntu"
     tags = {
