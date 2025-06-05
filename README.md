@@ -71,7 +71,7 @@ Repo with solution for infrastructure task during recruitment to StrongDM.
 - - Better logic
 - - Gradual development
 - - Modules are not required for one-off project (they could make sense for reppeated ones with well established framework)
-6. SDM Gateway's SSH port should not be exposed on the Internet or or intenally without proper SDM-enforce control
+6. SDM Gateway's SSH port should not be exposed on the Internet or  intenally without proper SDM-enforced control
 - Alternatives:
 - - SDM Gateway is avaialble on the Internet
 - - SDM Gateway is available on internal VPC network
