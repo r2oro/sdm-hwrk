@@ -42,6 +42,9 @@ resource "aws_security_group" "gateway_sg" {
     cidr_blocks = ["0.0.0.0/0"]
     description = "Allow all outbound traffic"
   }
+  tags = {
+    Name = "sdm_hwrk_gateway"
+  }
 }
 
 # Launch the EC2 instance that will run the StrongDM gateway
