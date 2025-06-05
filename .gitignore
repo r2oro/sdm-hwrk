@@ -91,3 +91,5 @@ coverage/
 *.njsproj
 *.sln
 *.sw?
+*.bkp
+.history
