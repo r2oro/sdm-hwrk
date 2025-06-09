@@ -40,7 +40,7 @@ Repo with solution for infrastructure task during recruitment to StrongDM.
 - - StrongDM seems to be focused around AWS
 - - Requirements refer to terms used in AWS
 - - I know AWS best
-2. Use own AWS lab istead of one provided by StrongDM
+2. Use own AWS lab instead of one provided by StrongDM
 - Alternatives:
 - - Use StringDM lab
 - Rationale:
@@ -55,7 +55,7 @@ Repo with solution for infrastructure task during recruitment to StrongDM.
 - - IaaS can allow gradual and controlled solution development
 - - It is repeatable
 - - It was preffered in task definition
-4. Use Terrafrom
+4. Use Terraform
 - Alternatives:
 - - Use CloudFormation
 - - Use Ansible, Chef 
