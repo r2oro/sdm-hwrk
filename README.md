@@ -42,7 +42,7 @@ Repo with solution for infrastructure task during recruitment to StrongDM.
 - - I know AWS best
 2. Use own AWS lab instead of one provided by StrongDM
 - Alternatives:
-- - Use StringDM lab
+- - Use StrongDM lab
 - Rationale:
 - - I have full admin access to it (no access problems)
 - - I can use API keys (In StrondM lab I have no IAM access, and generation fo keys could be difficult or even not prossible)
